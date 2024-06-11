@@ -1,36 +1,33 @@
 {
   "expo": {
-    "name": "tempApp",
-    "slug": "tempApp",
+    "name": "tempapp",
+    "slug": "tempapp",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
-    "scheme": "myapp",
-    "userInterfaceStyle": "automatic",
+    "icon": "./app/assets/icon.png",
+    "userInterfaceStyle": "light",
     "splash": {
-      "image": "./assets/images/splash.png",
+      "image": "./app/assets/splash.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
-    },
-    "android": {
-      "adaptiveIcon": {
-        "foregroundImage": "./assets/images/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
-      }
-    },
-    "web": {
-      "bundler": "metro",
-      "output": "static",
-      "favicon": "./assets/images/favicon.png"
+      "supportsTablet": true,
+      "bundleIdentifier": "com.vanshgupta2003.tempapp"
     },
     "plugins": [
+      "expo-font",
+      "@react-native-google-signin/google-signin",
       "expo-router"
     ],
-    "experiments": {
-      "typedRoutes": true
-    }
+    "extra": {
+      "eas": {
+        "projectId": "d4694e0c-2762-4735-a1c4-3c16d94dfba7"
+      }
+    },
+    "android": {
+      "package": "com.vanshgupta2003.tempapp"
+    },
+    "scheme": "tempapp"
   }
 }
