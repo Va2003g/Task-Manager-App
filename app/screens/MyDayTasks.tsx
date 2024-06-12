@@ -5,8 +5,8 @@ import { Link } from 'expo-router'
 const MyDayTasks = () => {
   return (
     <View style={styles.container}>
-      <Text>MyDayTasks</Text>
-      <Link href='screens/DashBoardScreen'>DashBoard</Link>
+      <Text>My Day Tasks</Text>
+      <Link href='screens/DashBoardScreen'>Go to DashBoard</Link>
     </View>
   )
 }

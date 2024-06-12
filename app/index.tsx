@@ -75,13 +75,10 @@ export default function App() {
   }, []);
 
   return userInFo ? (
-    // <View style={{ flex: 1 }}>
-    //   <DashBoardScreen />
-    // </View>
     router.push('screens/DashBoardScreen')
   ) : (
     <View style={{ flex: 1 }}>
-      <LoginScreen promptAsync={promptAsync} />
+      <LoginScreen promptAsync={()=>promptAsync()} />
     </View>
   );
 }

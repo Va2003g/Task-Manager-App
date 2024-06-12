@@ -8,13 +8,17 @@ import { Image } from "expo-image";
 import { Search, Bell, hamburger } from "../assets";
 import { Link, router } from "expo-router";
 import { useNavigation, DrawerActions } from "@react-navigation/native";
-import Navbar from '../../components/Navbar'
+import {Navbar,CustomDrawer} from '../../components'
+import { DrawerContentComponentProps } from "@react-navigation/drawer";
 const DrawerLayout = () => {
   const navigation = useNavigation();
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <Drawer
         initialRouteName="screens/DashBoardScreen"
+        drawerContent={(props: DrawerContentComponentProps)=>{
+          return <CustomDrawer {...props}/>
+        }}
         screenOptions={{
           header: () => {
             return (

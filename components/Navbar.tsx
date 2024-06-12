@@ -3,11 +3,10 @@ import React from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import { hamburger, Search, Bell } from "@/app/assets";
 import colors from "../colors";
-import { Link } from "expo-router";
 import { Image } from "expo-image";
 import { useNavigation, DrawerActions } from "@react-navigation/native";
 
-const Navbar = () => {
+export const Navbar = () => {
   const navigation = useNavigation();
   return (
     <LinearGradient
@@ -22,9 +21,7 @@ const Navbar = () => {
         >
           <Image source={hamburger} style={styles.drawerIcon} />
         </Pressable>
-        <Link href="screens/MyDayTasks">
-          <Text style={styles.text}>Dashboard</Text>
-        </Link>
+        <Text style={styles.text}>Dashboard</Text>
       </View>
       <View style={styles.images}>
         <Image source={Search} style={styles.logo} />

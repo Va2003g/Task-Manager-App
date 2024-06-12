@@ -4,5 +4,5 @@ export default {
     fontColor:'#232324',
     btnColor:'#FC5A5A',
     primaryDashboard:'rgba(82, 100, 204, 1)',
-    primaryDashboard2:'rgba(105, 123, 228, 1)'
+    primaryDashboard2:'rgba(105, 123, 228, 1)',
 }
