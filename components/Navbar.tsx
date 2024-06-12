@@ -5,8 +5,10 @@ import { hamburger, Search, Bell } from "@/app/assets";
 import colors from "../colors";
 import { Image } from "expo-image";
 import { useNavigation, DrawerActions } from "@react-navigation/native";
+import { DrawerHeaderProps } from "@react-navigation/drawer";
 
-export const Navbar = () => {
+export const Navbar = (props:DrawerHeaderProps) => {
+  // console.log('props: ', props.options.title)
   const navigation = useNavigation();
   return (
     <LinearGradient
@@ -21,7 +23,7 @@ export const Navbar = () => {
         >
           <Image source={hamburger} style={styles.drawerIcon} />
         </Pressable>
-        <Text style={styles.text}>Dashboard</Text>
+        <Text style={styles.text}>{props.options.title}</Text>
       </View>
       <View style={styles.images}>
         <Image source={Search} style={styles.logo} />

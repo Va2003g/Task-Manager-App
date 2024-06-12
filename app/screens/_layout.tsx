@@ -9,7 +9,7 @@ import { Search, Bell, hamburger } from "../assets";
 import { Link, router } from "expo-router";
 import { useNavigation, DrawerActions } from "@react-navigation/native";
 import {Navbar,CustomDrawer} from '../../components'
-import { DrawerContentComponentProps } from "@react-navigation/drawer";
+import { DrawerContentComponentProps, DrawerHeaderProps } from "@react-navigation/drawer";
 const DrawerLayout = () => {
   const navigation = useNavigation();
   return (
@@ -20,10 +20,8 @@ const DrawerLayout = () => {
           return <CustomDrawer {...props}/>
         }}
         screenOptions={{
-          header: () => {
-            return (
-              <Navbar/>
-            );
+          header: (props: DrawerHeaderProps) => {
+            return <Navbar {...props}/>
           },
         }}
       >
