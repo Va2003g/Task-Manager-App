@@ -3,7 +3,6 @@ import React from "react";
 import colors from "../colors";
 import { LinearGradient } from "expo-linear-gradient";
 import { Image } from "expo-image";
-import { hero } from "@/app/assets";
 import { useFonts } from "expo-font";
 import { Roboto_500Medium, Roboto_700Bold } from "@expo-google-fonts/roboto";
 import { DrawerContentComponentProps } from "@react-navigation/drawer";
@@ -102,7 +101,7 @@ const styles = StyleSheet.create({
     alignItems:'center'
   },
   drawerItemContainer: {
-    padding: 6,
+    padding: 13,
   },
   gradientWindow: {
     flex: 1,

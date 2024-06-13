@@ -1,5 +1,5 @@
 import { makeAutoObservable, makeObservable, observable } from "mobx";
-
+import { FetchTask } from "@/Backend";
 
 interface Task {
     name:string;
@@ -26,7 +26,9 @@ class store{
     }
 
     updateUser(userData:object){
-        this.User = userData
+        this.User = userData;
+       const data = FetchTask(userData);
+       console.log('data at mobx',data);
     }
 
     addTask(tasks:Task[])
