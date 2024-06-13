@@ -1,7 +1,5 @@
 import { Platform, StatusBar, StyleSheet, Text, View } from "react-native";
 import LoginScreen from "./LoginScreen";
-import DashBoardScreen from "./screens/DashBoardScreen";
-import { Loading } from "../utilities";
 import * as Google from "expo-auth-session/providers/google";
 import * as WebBrowser from "expo-web-browser"; //display web browser in app for login
 import {
@@ -13,6 +11,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import React, { useEffect, useState } from "react";
 import { auth } from "../Backend";
 import { router } from "expo-router";
+import {Store} from "@/MobX/store";
 //initialize the web browser in the app itself
 
 WebBrowser.maybeCompleteAuthSession();
@@ -62,6 +61,7 @@ export default function App() {
           if (Platform.OS === "android")
             console.log("user", JSON.stringify(user));
           setUserInfo(user);
+          Store.updateUser(user)
           await AsyncStorage.setItem("userInfo", JSON.stringify(user));
         } else {
           setUserInfo("");

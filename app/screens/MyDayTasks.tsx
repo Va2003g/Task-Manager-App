@@ -6,7 +6,6 @@ const MyDayTasks = () => {
   return (
     <View style={styles.container}>
       <Text>My Day Tasks</Text>
-      <Link href='screens/DashBoardScreen'>Go to DashBoard</Link>
     </View>
   )
 }

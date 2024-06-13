@@ -26,7 +26,11 @@ const DashBoardScreen = () => {
 
   return (
     <View style={styles.outerContainer}>
-      <View style={styles.filter}></View>
+      <View style={styles.filter}>
+        <Text>All</Text>
+        <Text>Pending</Text>
+        <Text>Completed</Text>
+      </View>
       <View style={styles.tasks}></View>
       
       <StatusBar barStyle={"light-content"} />
@@ -39,6 +43,7 @@ const styles = StyleSheet.create({
   
   filter: {
     flex: 3,
+    flexDirection:'row',
   },
   outerContainer: {
     flex: 1,

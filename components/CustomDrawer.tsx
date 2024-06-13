@@ -11,14 +11,15 @@ import { router } from "expo-router";
 import { auth } from "@/Backend";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { signOut } from "firebase/auth";
-
+import { observer } from "mobx-react";
+import { Store } from "@/MobX/store";
 export const CustomDrawer = (props: DrawerContentComponentProps) => {
+  // console.log('user',Store.User.displayName);
   const [fontsLoaded, fontError] = useFonts({
     Roboto_700Bold,Roboto_500Medium
   });
 
   if (!fontsLoaded && !fontError) {
-    console.log("Fonts not loaded in drawer");
     return null;
   }
   return (
@@ -28,8 +29,9 @@ export const CustomDrawer = (props: DrawerContentComponentProps) => {
           colors={[colors.primaryDashboard, colors.primaryDashboard2]}
           style={styles.gradientWindow}
         >
-          <Image source={hero} style={styles.image} />
-          <Text style={styles.name}>Vansh Gupta</Text>
+          {/* Typescript error user is of type object */}
+          <Image source={Store.User.photoURL} style={styles.image} />
+          <Text style={styles.name}>{Store.User.displayName}</Text>
         </LinearGradient>
         <View style={styles.content}>
           {props.state.routes.map((routeName, index) => {
@@ -76,8 +78,8 @@ export const CustomDrawer = (props: DrawerContentComponentProps) => {
     </View>
   );
 };
-
-export default CustomDrawer;
+//observer will make this component to render whenever store data changes..
+export default observer(CustomDrawer);
 
 const styles = StyleSheet.create({
   container: {
@@ -112,8 +114,8 @@ const styles = StyleSheet.create({
     gap: 10,
   },
   image: {
-    width: 70,
-    height: 50,
+    width: 46,
+    height: 46,
     borderRadius: 50,
   },
   name: {

@@ -1,12 +1,6 @@
-import { View, Text, StyleSheet, Pressable } from "react-native";
 import React from "react";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { Drawer } from "expo-router/drawer";
-import colors from "../../colors";
-import { LinearGradient } from "expo-linear-gradient";
-import { Image } from "expo-image";
-import { Search, Bell, hamburger } from "../assets";
-import { Link, router } from "expo-router";
 import { useNavigation, DrawerActions } from "@react-navigation/native";
 import {Navbar,CustomDrawer} from '../../components'
 import { DrawerContentComponentProps, DrawerHeaderProps } from "@react-navigation/drawer";
@@ -28,8 +22,8 @@ const DrawerLayout = () => {
         <Drawer.Screen
           name="DashBoardScreen"
           options={{
-            drawerLabel: "DashBoard",
-            title: "DashBoard",
+            drawerLabel: "Dashboard",
+            title: "Dashboard",
           }}
         />
         <Drawer.Screen

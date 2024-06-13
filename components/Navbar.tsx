@@ -8,7 +8,7 @@ import { useNavigation, DrawerActions } from "@react-navigation/native";
 import { DrawerHeaderProps } from "@react-navigation/drawer";
 
 export const Navbar = (props:DrawerHeaderProps) => {
-  // console.log('props: ', props.options.title)
+  // console.log('props: ', props.options.title) 
   const navigation = useNavigation();
   return (
     <LinearGradient
@@ -23,6 +23,7 @@ export const Navbar = (props:DrawerHeaderProps) => {
         >
           <Image source={hamburger} style={styles.drawerIcon} />
         </Pressable>
+      {/* props.options.title contains the drawer title names */}
         <Text style={styles.text}>{props.options.title}</Text>
       </View>
       <View style={styles.images}>
