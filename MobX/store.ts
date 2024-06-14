@@ -1,7 +1,7 @@
 import { makeAutoObservable, makeObservable, observable } from "mobx";
 import { FetchTask } from "@/Backend";
 
-interface Task {
+export interface Task {
     name:string;
     category:string,
     tags:string,
@@ -27,7 +27,7 @@ class store{
 
     updateUser(userData:object){
         this.User = userData;
-       const data = FetchTask(userData);
+       const data = FetchTask(userData).then((data)=>console.log('data at mobx',data));
        console.log('data at mobx',data);
     }
 

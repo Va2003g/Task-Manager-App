@@ -4,8 +4,10 @@ import { Drawer } from "expo-router/drawer";
 import { useNavigation, DrawerActions } from "@react-navigation/native";
 import {Navbar,CustomDrawer} from '../../components'
 import { DrawerContentComponentProps, DrawerHeaderProps } from "@react-navigation/drawer";
+import { StatusBar } from "react-native";
 const DrawerLayout = () => {
   const navigation = useNavigation();
+  <StatusBar barStyle={"light-content"} />
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <Drawer

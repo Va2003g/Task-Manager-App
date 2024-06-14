@@ -24,7 +24,7 @@ export default function App() {
   }); //loads an authorization request and give a response
 
   const checkUserFromLocalStorage = async () => {
-    setLoading(true);
+    // setLoading(true);
     try {
       let user: string | null = await AsyncStorage.getItem("userInfo");
       user = user ? JSON.parse(user) : null;
@@ -32,7 +32,7 @@ export default function App() {
     } catch (err) {
       console.log(err);
     } finally {
-      setLoading(false);
+      // setLoading(false);
     }
   };
   useEffect(() => {
@@ -60,9 +60,9 @@ export default function App() {
         if (user) {
           if (Platform.OS === "android")
             console.log("user", JSON.stringify(user));
+          await AsyncStorage.setItem("userInfo", JSON.stringify(user));
           setUserInfo(user);
           Store.updateUser(user)
-          await AsyncStorage.setItem("userInfo", JSON.stringify(user));
         } else {
           setUserInfo("");
           console.log("no one is logged in");
@@ -74,8 +74,15 @@ export default function App() {
     }
   }, []);
 
+  useEffect(() => {
+    if (userInFo) {
+      router.push('screens/DashBoardScreen');
+    }
+  }, [userInFo]);
+
   return userInFo ? (
-    router.push('screens/DashBoardScreen')
+    // router.push('screens/DashBoardScreen')
+    null
   ) : (
     <View style={{ flex: 1 }}>
       <LoginScreen promptAsync={()=>promptAsync()} />

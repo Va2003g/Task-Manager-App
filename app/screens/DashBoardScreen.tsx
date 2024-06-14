@@ -11,8 +11,10 @@ import {
 import React from "react";
 import { useFonts } from "expo-font";
 import { Roboto_400Regular, Roboto_700Bold } from "@expo-google-fonts/roboto";
-import { router, useNavigation } from "expo-router";
+import { Link, router, useNavigation } from "expo-router";
 import colors from "@/colors";
+import { TaskPhoto } from "../assets";
+import { Image } from "expo-image";
 
 const DashBoardScreen = () => {
   const navigation = useNavigation();
@@ -32,7 +34,9 @@ const DashBoardScreen = () => {
           <Text style={styles.font}>Pending</Text>
           <Text style={styles.font}>Completed</Text>
         </View>
-        <View style={styles.tasks}></View>
+        <View style={styles.tasks}>
+          <Link href='AddTask'>+</Link>
+        </View>
 
       <StatusBar barStyle={"light-content"} />
     </View>
@@ -57,6 +61,8 @@ const styles = StyleSheet.create({
   },
   tasks: {
     flex: 20,
+    justifyContent:'center',
+    alignItems:'center',
   },
   font:{
     color:colors.dashboardFont,
