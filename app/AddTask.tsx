@@ -17,6 +17,7 @@ import colors from "@/colors";
 import { useFonts } from "expo-font";
 import { Roboto_400Regular, Roboto_500Medium } from "@expo-google-fonts/roboto";
 import { TaskData } from "../Backend";
+import {Store} from '../MobX/store'
 const AddTask = () => {
   const [tags, setTags] = useState<string[]>([]);
   const [isFocussed, setIsFocussed] = useState(false);
@@ -41,7 +42,7 @@ const AddTask = () => {
         [name]: value,
       };
     });
-    console.log("task", task);
+    // console.log("task", task);
   };
 
   const handleTagsInput = (props:TextInputProps) => {
@@ -72,8 +73,8 @@ const AddTask = () => {
 
   const handleSubmit = ()=>{
     Alert.alert("Success", "Task Added Successfully")
-    console.log('Task',task)
-
+    console.log('Task at Addtask component',task)
+    Store.addTask(task);
   }
   return (
     <View style={styles.container}>

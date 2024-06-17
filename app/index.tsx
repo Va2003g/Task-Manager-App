@@ -28,7 +28,9 @@ export default function App() {
     try {
       let user: string | null = await AsyncStorage.getItem("userInfo");
       user = user ? JSON.parse(user) : null;
-      if (user != null) setUserInfo(user);
+      if (user != null) {
+        setUserInfo(user);
+      }
     } catch (err) {
       console.log(err);
     } finally {
@@ -76,6 +78,7 @@ export default function App() {
   //Warn:navigation is changing while component is not mounted
   useEffect(() => {
     if (userInFo) {
+      Store.updateUser(userInFo);
       router.push("screens/DashBoardScreen");
     }
   }, [userInFo]);
