@@ -12,4 +12,6 @@ export default {
   formGradient3: "rgba(130, 126, 225, 1)",
   taskBtn1: "#6B85E6",
   taskBtn2: "#6895E6",
+  addFormGradient: "rgba(108, 134, 230, 1)",
+  addFormGradient2: "rgba(105, 149, 230, 1)",
 };

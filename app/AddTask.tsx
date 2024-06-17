@@ -6,6 +6,7 @@ import {
   StatusBar,
   TextInput,
   TouchableOpacity,
+  Alert,
 } from "react-native";
 import React from "react";
 import { hero, TaskPhoto, Google, hamburger } from "./assets";
@@ -15,6 +16,7 @@ import colors from "@/colors";
 import { useFonts } from "expo-font";
 import {
   Roboto_400Regular,
+  Roboto_500Medium,
   Roboto_700Bold,
   Roboto_900Black_Italic,
 } from "@expo-google-fonts/roboto";
@@ -22,7 +24,7 @@ import {
 const AddTask = () => {
   const [fontsLoaded, fontError] = useFonts({
     Roboto_400Regular,
-    Roboto_700Bold,
+    Roboto_500Medium,
   });
   return (
     <View style={styles.container}>
@@ -39,7 +41,7 @@ const AddTask = () => {
       </View>
 
       <View style={styles.formContainer}>
-        <Text>Add New Task</Text>
+        <Text style={styles.heading}>Add New Task</Text>
         <View style={styles.form}>
           <Text style={styles.label}>Task</Text>
           <TextInput placeholder="Task Name" style={styles.input} />
@@ -56,7 +58,10 @@ const AddTask = () => {
             colors={[colors.taskBtn1, colors.taskBtn2]}
             style={{ borderRadius: 10, marginHorizontal: 14 }}
           >
-            <TouchableOpacity style={styles.button}>
+            <TouchableOpacity
+              style={styles.button}
+              onPress={() => Alert.alert("Success", "Task Added Successfully")}
+            >
               <Text style={styles.btnText}>Add Task</Text>
             </TouchableOpacity>
           </LinearGradient>
@@ -72,6 +77,13 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: "space-evenly",
+    padding: 41,
+    gap: 54,
+  },
+  heading: {
+    fontFamily: "Roboto_500Medium",
+    fontSize: 22,
+    color: "#171725",
   },
   gradient: {
     borderRadius:
@@ -105,13 +117,15 @@ const styles = StyleSheet.create({
   },
   formContainer: {
     flex: 8,
+    gap: 30,
   },
   form: {
     flex: 1,
+    gap: 6,
   },
   input: {
     height: 40,
-    margin: 12,
+    margin: 10,
     borderBottomWidth: 3,
     padding: 10,
     borderColor: "rgba(226, 226, 234, 1)",

@@ -11,7 +11,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import React, { useEffect, useState } from "react";
 import { auth } from "../Backend";
 import { router } from "expo-router";
-import {Store} from "@/MobX/store";
+import { Store } from "@/MobX/store";
 //initialize the web browser in the app itself
 
 WebBrowser.maybeCompleteAuthSession();
@@ -62,7 +62,7 @@ export default function App() {
             console.log("user", JSON.stringify(user));
           await AsyncStorage.setItem("userInfo", JSON.stringify(user));
           setUserInfo(user);
-          Store.updateUser(user)
+          Store.updateUser(user);
         } else {
           setUserInfo("");
           console.log("no one is logged in");
@@ -73,19 +73,16 @@ export default function App() {
       console.log("err: ", err);
     }
   }, []);
-
+  //Warn:navigation is changing while component is not mounted
   useEffect(() => {
     if (userInFo) {
-      router.push('screens/DashBoardScreen');
+      router.push("screens/DashBoardScreen");
     }
   }, [userInFo]);
 
-  return userInFo ? (
-    // router.push('screens/DashBoardScreen')
-    null
-  ) : (
+  return userInFo ? null : ( // router.push('screens/DashBoardScreen')
     <View style={{ flex: 1 }}>
-      <LoginScreen promptAsync={()=>promptAsync()} />
+      <LoginScreen promptAsync={() => promptAsync()} />
     </View>
   );
 }
