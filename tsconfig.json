@@ -11,5 +11,5 @@
   "include": [
     "**/*.ts",
     "**/*.tsx"
-, "app/assets/index.js"  ]
+, "app/assets/index.js", "Backend/Firebase.js"  ]
 }

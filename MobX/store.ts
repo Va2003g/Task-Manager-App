@@ -14,7 +14,7 @@ class store{
 
     User:Object={};
     Tasks:Task[]=[];
-
+    UserId:String='';
     constructor(){
         makeAutoObservable(this)
 
@@ -26,7 +26,7 @@ class store{
     }
 
     updateUser(userData:object){
-        this.User = userData;
+       this.User = userData;
        const data = FetchTask(userData).then((data)=>console.log('data at mobx',data));
        console.log('data at mobx',data);
     }

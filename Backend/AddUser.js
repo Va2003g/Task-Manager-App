@@ -1,7 +1,7 @@
 import {query,collection, addDoc,getDocs,where} from 'firebase/firestore'
 import { db } from './Firebase'
 
-export const AddUser = async(data,navigate)=>{
+export const AddUser = async(data)=>{
     try{
         let id;
         const queryForFindingUser = query(collection(db, "UserData" ),where("email", "==", data.email))

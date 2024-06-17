@@ -1,15 +1,7 @@
 import { query, collection, getDocs, where } from "firebase/firestore";
 import { db } from "./Firebase";
 import { Task } from "@/MobX/store";
-// interface Task {
-//     id:string,
-//     name:string;
-//     category:string,
-//     tags:string,
-//     dueDate:string,
-//     status:string,
-//     userId:string,
-// }
+
 async function FetchTask(user:Object) {
   try {
     const queryForFindingUser = query(

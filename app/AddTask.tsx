@@ -3,29 +3,48 @@ import {
   Text,
   View,
   Dimensions,
-  StatusBar,
   TextInput,
   TouchableOpacity,
   Alert,
+  ScrollView,
+  NativeSyntheticEvent,
+  TextInputChangeEventData,
 } from "react-native";
-import React from "react";
+import React, { ChangeEvent, ReactEventHandler, useState } from "react";
 import { hero, TaskPhoto, Google, hamburger } from "./assets";
 import { Image } from "expo-image";
 import { LinearGradient } from "expo-linear-gradient";
 import colors from "@/colors";
 import { useFonts } from "expo-font";
-import {
-  Roboto_400Regular,
-  Roboto_500Medium,
-  Roboto_700Bold,
-  Roboto_900Black_Italic,
-} from "@expo-google-fonts/roboto";
-
+import { Roboto_400Regular, Roboto_500Medium } from "@expo-google-fonts/roboto";
+import { TaskData } from "../Backend";
 const AddTask = () => {
+  const [tags, setTags] = useState<string[]>([]);
+  const [isFocussed, setIsFocussed] = useState(false);
+  const [task, setTask] = useState<TaskData>({
+    name: "",
+    tags: tags,
+    category: "",
+    dueDate: "",
+    status: "pending",
+    time: "",
+    id: "",
+    userId: "",
+  });
   const [fontsLoaded, fontError] = useFonts({
     Roboto_400Regular,
     Roboto_500Medium,
   });
+
+  const handleChange = (name: string, value: string) => {
+    setTask((prevState) => {
+      return {
+        ...prevState,
+        [name]: value,
+      };
+    });
+    console.log("task", task);
+  };
   return (
     <View style={styles.container}>
       <View style={{ flex: 2, alignItems: "center" }}>
@@ -42,17 +61,49 @@ const AddTask = () => {
 
       <View style={styles.formContainer}>
         <Text style={styles.heading}>Add New Task</Text>
-        <View style={styles.form}>
+        <ScrollView style={styles.form}>
           <Text style={styles.label}>Task</Text>
-          <TextInput placeholder="Task Name" style={styles.input} />
+          <TextInput
+            placeholder="Task Name"
+            style={styles.input}
+            keyboardType="numeric"
+            onFocus={() => setIsFocussed(!false)}
+            onBlur={() => setIsFocussed(false)}
+            value={task.name}
+            onChangeText={(text) => handleChange("name", text)}
+          />
+          {/* {isFocussed?(<Text>Hi I am isFocussed</Text>):<Text>I am not more</Text>} */}
           <Text style={styles.label}>Category</Text>
-          <TextInput placeholder="Category" style={styles.input} />
+          <TextInput
+            placeholder="Category"
+            style={styles.input}
+            value={task.category}
+            onChangeText={(text) => handleChange("category", text)}
+          />
           <Text style={styles.label}>Tags</Text>
-          <TextInput placeholder="Tags" style={styles.input} />
+          <TextInput
+            placeholder="Tags"
+            style={styles.input}
+            onKeyPress={() => {}}
+          />
+          {/* <FlatList
+                data={tags}
+                renderItem={(tag)=><Text>tag</Text>}
+              /> */}
           <Text style={styles.label}>Time</Text>
-          <TextInput placeholder="Time" style={styles.input} />
+          <TextInput
+            placeholder="Time (in hrs)"
+            style={styles.input}
+            value={task.time}
+            onChangeText={(text) => handleChange("time", text)}
+          />
           <Text style={styles.label}>Due Date</Text>
-          <TextInput placeholder="Due Date" style={styles.input} />
+          <TextInput
+            placeholder="Due Date"
+            style={styles.input}
+            value={task.dueDate}
+            onChangeText={(text) => handleChange("dueDate", text)}
+          />
 
           <LinearGradient
             colors={[colors.taskBtn1, colors.taskBtn2]}
@@ -65,7 +116,7 @@ const AddTask = () => {
               <Text style={styles.btnText}>Add Task</Text>
             </TouchableOpacity>
           </LinearGradient>
-        </View>
+        </ScrollView>
       </View>
     </View>
   );
@@ -122,6 +173,7 @@ const styles = StyleSheet.create({
   form: {
     flex: 1,
     gap: 6,
+    height: 100,
   },
   input: {
     height: 40,

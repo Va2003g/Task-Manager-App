@@ -1,9 +1,10 @@
 import {query,collection, addDoc,getDocs,getDoc,where} from 'firebase/firestore'
 import { db,auth } from './Firebase'
-export const AddTask = async(dataArray)=>{
+import { TaskData } from './TaskData';
+export const AddTask = async(dataArray:TaskData)=>{
     try{
         const user = auth.currentUser;
-        const queryForFindingUser = query(collection(db, "UserData" ),where("email", "==", user.email));
+        const queryForFindingUser = query(collection(db, "UserData" ),where("email", "==", user?.email));
         const queryResultForFindingUser = await getDocs(queryForFindingUser);
         let userId = queryResultForFindingUser.docs[0].id;
         queryResultForFindingUser.forEach((doc)=>{

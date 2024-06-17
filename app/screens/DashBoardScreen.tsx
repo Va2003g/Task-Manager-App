@@ -8,14 +8,13 @@ import {
   StatusBar,
   Pressable,
   Dimensions,
+  Alert,
 } from "react-native";
 import React from "react";
 import { useFonts } from "expo-font";
 import { Roboto_400Regular, Roboto_700Bold } from "@expo-google-fonts/roboto";
 import { Link, router, useNavigation } from "expo-router";
 import colors from "@/colors";
-import { TaskPhoto } from "../assets";
-import { Image } from "expo-image";
 import { LinearGradient } from "expo-linear-gradient";
 
 const DashBoardScreen = () => {
@@ -91,12 +90,8 @@ const styles = StyleSheet.create({
   font: {
     color: colors.dashboardFont,
     fontFamily: "Roboto_400Regular",
-    // color:'white',
     flex: 1,
     textAlign: "center",
-    // shadowColor:'#0000000F',
-    // shadowOffset:{width:0,height:4},
-    // backgroundColor:'blue',
     padding: 10,
     fontWeight: "bold",
     fontSize: 16,
