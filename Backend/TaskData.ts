@@ -6,5 +6,4 @@ export interface TaskData {
     dueDate:string,
     status:string,
     userId:string,
-    time:string,
 }
