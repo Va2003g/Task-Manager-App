@@ -1,6 +1,7 @@
 import { makeAutoObservable, makeObservable, observable } from "mobx";
-import { AddUser, FetchTask } from "@/Backend";
+import { AddTask, AddUser, FetchTask } from "@/Backend";
 import { TaskData } from "@/Backend";
+import { Alert } from "react-native";
 
 class store {
   User: Object = {};
@@ -27,15 +28,14 @@ class store {
 
   addTask(tasks: TaskData) {
     this.Tasks = tasks;
-    console.log("Task data at mobx", tasks);
-    //call addtask function
-    /**
-     * in add task firstly save all tags with userid and name in firebase
-     * same for category
-     * same for status
-     * store all these 3 ids (or more if tags are multiple)
-     * then store task data with TaskName,UserId,CategoryId,TagsId,DueDate,StatusId in firebase
-     */
+    if (this.UserId !== undefined) {
+      this.Tasks.userId = this.UserId;
+      AddTask(tasks, this.UserId).then((res) =>
+        res
+          ? Alert.alert("Success", "Data saved successfully")
+          : Alert.alert("Failure", "Error in Saving Data")
+      );
+    }
   }
   get getUserId() {
     return this.UserId;

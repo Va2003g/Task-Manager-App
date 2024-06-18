@@ -69,7 +69,7 @@ export const CustomDrawer = (props: DrawerContentComponentProps) => {
             onPress={async () => {
               await signOut(auth);
               AsyncStorage.clear();
-              router.push("LoginScreen");
+              router.push("/");
             }}
           />
         </Pressable>
