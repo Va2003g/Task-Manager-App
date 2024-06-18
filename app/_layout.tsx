@@ -16,7 +16,7 @@ const _layout = () => {
       <Stack.Screen
         name='AddTask'
         options={{
-          presentation:'modal'
+          presentation:'modal',
         }}
       />
 

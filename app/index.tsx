@@ -65,7 +65,10 @@ export default function App() {
           await AsyncStorage.setItem("userInfo", JSON.stringify(user));
           setUserInfo(user);
           Store.updateUser(user);
-          FetchTask(Store.UserId)
+          FetchTask(Store.UserId);
+
+
+          
         } else {
           setUserInfo("");
           console.log("no one is logged in");

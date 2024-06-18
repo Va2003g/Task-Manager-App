@@ -16,6 +16,10 @@ import { Roboto_400Regular, Roboto_700Bold } from "@expo-google-fonts/roboto";
 import { Link, router, useNavigation } from "expo-router";
 import colors from "@/colors";
 import { LinearGradient } from "expo-linear-gradient";
+import { observable } from "mobx";
+import { observer } from "mobx-react";
+import { Store } from "@/MobX/store";
+import TaskItem from "@/components/TaskItem";
 
 const DashBoardScreen = () => {
   const navigation = useNavigation();
@@ -37,7 +41,7 @@ const DashBoardScreen = () => {
         <Text style={styles.font}>Completed</Text>
       </View>
       <View style={styles.tasks}>
-        
+          {Store.UserTask.map((task,index)=><TaskItem task={task} key={index}/>)}
       </View>
       <LinearGradient
         style={styles.addBtn}
@@ -53,7 +57,7 @@ const DashBoardScreen = () => {
   );
 };
 
-export default DashBoardScreen;
+export default observer(DashBoardScreen);
 const styles = StyleSheet.create({
   filter: {
     flex: 1,

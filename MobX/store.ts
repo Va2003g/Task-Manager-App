@@ -7,6 +7,7 @@ class store {
   User: Object = {};
   Tasks: TaskData | null = null;
   UserId: string | undefined = "";
+  UserTask:TaskData[] = []
   constructor() {
     makeAutoObservable(this);
 
@@ -36,6 +37,11 @@ class store {
           : Alert.alert("Failure", "Error in Saving Data")
       );
     }
+  }
+
+  updateUserTask(tasks:TaskData[])
+  {
+    this.UserTask = tasks;
   }
   get getUserId() {
     return this.UserId;
