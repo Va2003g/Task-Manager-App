@@ -59,15 +59,16 @@ export const AddTask = async (data: TaskData, userid: string) => {
 
     //Storing Status in Firebase.
     response = await addDoc(collection(db,'Status'),{
-        Pending:true,
-        Completed:false,
+        Pending:data.status.toLowerCase()==='pending' ? true : false,
+        Completed:data.status.toLowerCase() ==='completed' ? true : false,
         userId:userid,
     })
 
     storedDoc = await getDoc(response);
     if(storedDoc.exists()) data.status = storedDoc.id;
-
-    //Storing Taks in Firebase 
+    //Storing Taks in Firebase
+    data.userId = userid; 
+    console.log('Final task going to be saved',data)
     response = await addDoc(collection(db,'TaskData'),data);
     storedDoc = await getDoc(response);
     if(storedDoc.exists())

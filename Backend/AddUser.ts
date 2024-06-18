@@ -17,7 +17,7 @@ export const AddUser = async(data:Object)=>{
         }else{
             id = checkUser.docs[0].id;
         }
-        console.log('id in add user: ', id)
+        // console.log('id in add user: ', id)
         return id;
     }catch(err)
     {

@@ -36,7 +36,9 @@ const DashBoardScreen = () => {
         <Text style={styles.font}>Pending</Text>
         <Text style={styles.font}>Completed</Text>
       </View>
-      <View style={styles.tasks}></View>
+      <View style={styles.tasks}>
+        
+      </View>
       <LinearGradient
         style={styles.addBtn}
         colors={[colors.addFormGradient, colors.addFormGradient2]}

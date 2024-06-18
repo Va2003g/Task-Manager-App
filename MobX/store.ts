@@ -21,8 +21,8 @@ class store {
     this.User = userData;
     //    const data = FetchTask(userData).then((data)=>console.log('data at mobx',data));
     const id = AddUser(userData).then((id) => {
-      console.log("id: ", id);
       this.UserId = id;
+      // console.log("Userid: ", this.UserId);
     });
   }
 

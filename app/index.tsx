@@ -9,7 +9,7 @@ import {
 } from "firebase/auth";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import React, { useEffect, useState } from "react";
-import { auth } from "../Backend";
+import { FetchTask, auth } from "../Backend";
 import { router } from "expo-router";
 import { Store } from "@/MobX/store";
 //initialize the web browser in the app itself
@@ -65,6 +65,7 @@ export default function App() {
           await AsyncStorage.setItem("userInfo", JSON.stringify(user));
           setUserInfo(user);
           Store.updateUser(user);
+          FetchTask(Store.UserId)
         } else {
           setUserInfo("");
           console.log("no one is logged in");
@@ -79,6 +80,7 @@ export default function App() {
   useEffect(() => {
     if (userInFo) {
       Store.updateUser(userInFo);
+      FetchTask(Store.UserId)
       router.push("screens/DashBoardScreen");
     }
   }, [userInFo]);

@@ -17,7 +17,7 @@ import colors from "@/colors";
 import { useFonts } from "expo-font";
 import { Roboto_400Regular, Roboto_500Medium } from "@expo-google-fonts/roboto";
 import { TaskData } from "../Backend";
-import {Store} from '../MobX/store'
+import { Store } from "../MobX/store";
 const AddTask = () => {
   const [tags, setTags] = useState<string[]>([]);
   const [isFocussed, setIsFocussed] = useState(false);
@@ -45,37 +45,46 @@ const AddTask = () => {
     // console.log("task", task);
   };
 
-  const handleTagsInput = (props:TextInputProps) => {
+  const handleTagsInput = (props: TextInputProps) => {
     const text = props.nativeEvent?.text;
     // setTags((prevState) => {
     //   if(text==='') return prevState
     //   return [...prevState, text];
     // });
     task.tags.push(text);
-    setTask((prevState)=>{
-        return {
-            ...prevState,
-        }
-    })
+    setTask((prevState) => {
+      return {
+        ...prevState,
+      };
+    });
     // // console.log("tags", tags);
     // console.log("task", task);
   };
 
-  const deleteItem = (tag: string)=>{
-    const filteredTags = task.tags.filter((tagValue)=>tagValue!==tag)
-    setTask((prevState)=>{
-        return {
-            ...prevState,
-            tags:filteredTags
-        }
-    })
-  }
+  const deleteItem = (tag: string) => {
+    const filteredTags = task.tags.filter((tagValue) => tagValue !== tag);
+    setTask((prevState) => {
+      return {
+        ...prevState,
+        tags: filteredTags,
+      };
+    });
+  };
 
-  const handleSubmit = ()=>{
-    Alert.alert("Success", "Task Added Successfully")
-    console.log('Task at Addtask component',task)
+  const handleSubmit = () => {
+    // Alert.alert("Success", "Task Added Successfully")
+    console.log("Task at Addtask component", task);
     Store.addTask(task);
-  }
+    setTask({
+      name: "",
+      tags: [],
+      category: "",
+      dueDate: "",
+      status: "",
+      id: "",
+      userId: "",
+    });
+  };
   return (
     <View style={styles.container}>
       <View style={{ flex: 2, alignItems: "center" }}>
@@ -117,10 +126,14 @@ const AddTask = () => {
             style={styles.input}
             onSubmitEditing={handleTagsInput}
           />
-          {task.tags.length!==0 && (
+          {task.tags.length !== 0 && (
             <View style={styles.tagsContainer}>
               {task.tags?.map((tag, index) => (
-                <Text key={index} style={styles.tagsItem} onPress={()=>deleteItem(tag)}>
+                <Text
+                  key={index}
+                  style={styles.tagsItem}
+                  onPress={() => deleteItem(tag)}
+                >
                   {tag},
                 </Text>
               ))}
@@ -137,12 +150,9 @@ const AddTask = () => {
 
           <LinearGradient
             colors={[colors.taskBtn1, colors.taskBtn2]}
-            style={{ borderRadius: 10,marginTop:45}}
+            style={{ borderRadius: 10, marginTop: 45 }}
           >
-            <TouchableOpacity
-              style={styles.button}
-              onPress={handleSubmit}
-            >
+            <TouchableOpacity style={styles.button} onPress={handleSubmit}>
               <Text style={styles.btnText}>Add Task</Text>
             </TouchableOpacity>
           </LinearGradient>
@@ -160,6 +170,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-evenly",
     padding: 41,
     gap: 54,
+    backgroundColor: colors.secondaryDashboard,
   },
   tagsContainer: {
     display: "flex",
