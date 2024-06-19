@@ -3,12 +3,13 @@ import { AddTask, AddUser, FetchTask } from "@/Backend";
 import { TaskData } from "@/Backend";
 import { Alert } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-
+import React,{ useState } from "react";
 class store {
   User: Object = {};
   Tasks: TaskData | null = null;
   UserId: string | undefined = "";
-  UserTask:TaskData[] = []
+  UserTask: TaskData[] = [];
+ loading:boolean = false;
   constructor() {
     makeAutoObservable(this);
 
@@ -19,15 +20,43 @@ class store {
     // })
   }
 
-  updateUser(userData: object) {
-    this.User = userData;
-    //    const data = FetchTask(userData).then((data)=>console.log('data at mobx',data));
-    const id = AddUser(userData).then((id) => {
-      this.UserId = id;
-      // console.log("Userid: ", this.UserId);
-    });
-  }
+  setloading = (value:boolean) => {
+    this.loading = value;
+  };
 
+  async updateUser(userData: object) {
+    this.User = userData;
+  
+    try {
+      const id = await AddUser(userData);
+      this.UserId = id;
+      // console.log("Userid from local storage in mobx: ", this.UserId);
+  
+      this.setloading(true);
+      let tasks = await AsyncStorage.getItem("TaskData");
+      // console.log('tasks in update user before condition: ', tasks,typeof(tasks))
+      // tasks = tasks ? await JSON.parse(tasks) : [];
+      
+      if (tasks!==null) {
+        // console.log("tasks from local storage: ", tasks);
+        this.updateUserTask(await JSON.parse(tasks));
+        this.setloading(false);
+      } else{
+        // console.log('this.UserTask.length : ', this.UserTask.length);
+        const fetchedTasks = await FetchTask(this.UserId);
+        if (fetchedTasks !== undefined) {
+          this.updateUserTask(fetchedTasks);
+          await AsyncStorage.setItem("TaskData", JSON.stringify(fetchedTasks));
+          console.log("data Saved successfully");
+          this.setloading(false);
+        }
+      }
+    } catch (error) {
+      console.error("Error in updateUser: ", error);
+      this.setloading(false);
+    }
+  }
+  
   addTask(tasks: TaskData) {
     this.Tasks = tasks;
     if (this.UserId !== undefined) {
@@ -40,10 +69,12 @@ class store {
     }
   }
 
-  updateUserTask(tasks:TaskData[])
-  {
+  updateUserTask(tasks: TaskData[]) {
     this.UserTask = tasks;
-    AsyncStorage.setItem("TaskData", JSON.stringify(tasks));
+    console.log("tasks at updateUserTask: ", tasks);
+    // AsyncStorage.setItem("TaskData", JSON.stringify(tasks)).then((tasks) =>
+    //   console.log("data at updateUserTask", tasks)
+    // );
   }
   get getUserId() {
     return this.UserId;

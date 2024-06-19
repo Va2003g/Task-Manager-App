@@ -25,22 +25,16 @@ export default function App() {
   const checkUserFromLocalStorage = async () => {
     // setLoading(true);
     try {
-      let user: string | null = await AsyncStorage.getItem("userInfo");
+      let user: string | null | object = await AsyncStorage.getItem("userInfo");
       user = user ? JSON.parse(user) : null;
       if (user != null) {
-        let tasks = await AsyncStorage.getItem('TaskData')
-        tasks = tasks ? JSON.parse(tasks):[];
-        if (Array.isArray(tasks)) {
-          console.log('tasks from local storage: ', tasks)
-          Store.updateUserTask(tasks);
-        }
+        console.log('user from local storage: ', user)
         setUserInfo(user);
-        // router.push("screens/DashBoardScreen");
+        if(typeof user!=='string')
+        Store.updateUser(user);
       }
     } catch (err) {
       console.log(err);
-    } finally {
-      // setLoading(false);
     }
   };
   useEffect(() => {
@@ -60,11 +54,11 @@ export default function App() {
       );
     }
   }, [response]);
-
+  
   useEffect(() => {
     checkUserFromLocalStorage();
     try {
-      onAuthStateChanged(auth, async (user) => {
+      const unsub = onAuthStateChanged(auth, async (user) => {
         if (user) {
           if (Platform.OS === "android")
             console.log("user", JSON.stringify(user));
@@ -72,14 +66,14 @@ export default function App() {
           // setUserInfo(user);
             Store.updateUser(user);
           // if(!Store.UserTask)
-            FetchTask(Store.UserId);
+            // FetchTask(Store.UserId);
           router.push("screens/DashBoardScreen");
         } else {
           setUserInfo("");
           console.log("no one is logged in");
         }
       });
-
+      ()=>unsub();
     } catch (err) {
       console.log("err: ", err);
     }

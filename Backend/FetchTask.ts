@@ -10,7 +10,6 @@ import {
 } from "firebase/firestore";
 import { db } from "./Firebase";
 import { TaskData } from "./TaskData";
-import { Store } from "@/MobX/store";
 
 /**
  * find all categories with ids
@@ -58,7 +57,8 @@ function formatTask(
     task.tags = tagsFilteredArray;
   });
   // console.log('tasks at formatTask',tasks)
-  Store.updateUserTask(tasks);
+  // Store.updateUserTask(tasks);
+  return tasks;
 }
 
 async function FetchTask(userid: string | undefined) {
@@ -107,7 +107,7 @@ async function FetchTask(userid: string | undefined) {
       task.push({ id: doc.id, ...doc.data() } as TaskData);
     });
     // console.log("task", task);
-    formatTask(task, categoryArray, tagsArray, statusArray);
+    return formatTask(task, categoryArray, tagsArray, statusArray);
   } catch (err) {
     console.log(err);
   }

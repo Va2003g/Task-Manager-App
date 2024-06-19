@@ -19,7 +19,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import { observable } from "mobx";
 import { observer } from "mobx-react";
 import { Store } from "@/MobX/store";
-import {TaskItem} from "@/components";
+import { TaskItem } from "@/components";
 
 const DashBoardScreen = () => {
   const navigation = useNavigation();
@@ -41,7 +41,13 @@ const DashBoardScreen = () => {
         <Text style={styles.font}>Completed</Text>
       </View>
       <View style={styles.tasks}>
-          {Store.UserTask.map((task,index)=><TaskItem task={task} key={index}/>)}
+        {Store.loading ? (
+          <Text>Loading....</Text>
+        ) : (
+          Store.UserTask.map((task, index) => (
+            <TaskItem task={task} key={index} />
+          ))
+        )}
       </View>
       <LinearGradient
         style={styles.addBtn}
@@ -78,8 +84,8 @@ const styles = StyleSheet.create({
     // justifyContent: "center",
     // alignItems: "center",
     zIndex: 2,
-    gap:10,
-    marginTop:15,
+    gap: 10,
+    marginTop: 15,
   },
   addBtn: {
     position: "absolute",
