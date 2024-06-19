@@ -19,7 +19,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import { observable } from "mobx";
 import { observer } from "mobx-react";
 import { Store } from "@/MobX/store";
-import TaskItem from "@/components/TaskItem";
+import {TaskItem} from "@/components";
 
 const DashBoardScreen = () => {
   const navigation = useNavigation();
@@ -75,9 +75,11 @@ const styles = StyleSheet.create({
   },
   tasks: {
     flex: 20,
-    justifyContent: "center",
-    alignItems: "center",
+    // justifyContent: "center",
+    // alignItems: "center",
     zIndex: 2,
+    gap:10,
+    marginTop:15,
   },
   addBtn: {
     position: "absolute",

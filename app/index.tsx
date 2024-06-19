@@ -9,7 +9,7 @@ import {
 } from "firebase/auth";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import React, { useEffect, useState } from "react";
-import { FetchTask, auth } from "../Backend";
+import { FetchTask, TaskData, auth } from "../Backend";
 import { router } from "expo-router";
 import { Store } from "@/MobX/store";
 //initialize the web browser in the app itself
@@ -17,7 +17,6 @@ import { Store } from "@/MobX/store";
 WebBrowser.maybeCompleteAuthSession();
 export default function App() {
   const [userInFo, setUserInfo] = useState<Object>();
-  const [loading, setLoading] = useState<boolean>(false);
   const [request, response, promptAsync] = Google.useAuthRequest({
     iosClientId: process.env.EXPO_PUBLIC_IOS_CLIENT_ID,
     androidClientId: process.env.EXPO_PUBLIC_ANDROID_CLIENT_ID,
@@ -29,7 +28,14 @@ export default function App() {
       let user: string | null = await AsyncStorage.getItem("userInfo");
       user = user ? JSON.parse(user) : null;
       if (user != null) {
+        let tasks = await AsyncStorage.getItem('TaskData')
+        tasks = tasks ? JSON.parse(tasks):[];
+        if (Array.isArray(tasks)) {
+          console.log('tasks from local storage: ', tasks)
+          Store.updateUserTask(tasks);
+        }
         setUserInfo(user);
+        // router.push("screens/DashBoardScreen");
       }
     } catch (err) {
       console.log(err);
@@ -58,35 +64,33 @@ export default function App() {
   useEffect(() => {
     checkUserFromLocalStorage();
     try {
-      const unsub = onAuthStateChanged(auth, async (user) => {
+      onAuthStateChanged(auth, async (user) => {
         if (user) {
           if (Platform.OS === "android")
             console.log("user", JSON.stringify(user));
           await AsyncStorage.setItem("userInfo", JSON.stringify(user));
-          setUserInfo(user);
-          Store.updateUser(user);
-          FetchTask(Store.UserId);
-
-
-          
+          // setUserInfo(user);
+            Store.updateUser(user);
+          // if(!Store.UserTask)
+            FetchTask(Store.UserId);
+          router.push("screens/DashBoardScreen");
         } else {
           setUserInfo("");
           console.log("no one is logged in");
         }
       });
-      // return ()=>unsub();
+
     } catch (err) {
       console.log("err: ", err);
     }
   }, []);
   //Warn:navigation is changing while component is not mounted
-  useEffect(() => {
-    if (userInFo) {
-      Store.updateUser(userInFo);
-      FetchTask(Store.UserId)
-      router.push("screens/DashBoardScreen");
-    }
-  }, [userInFo]);
+  // useEffect(() => {
+  //   if (userInFo) {
+  //     Store.updateUser(userInFo);
+  //     router.push("screens/DashBoardScreen");
+  //   }
+  // }, [userInFo]);
 
   return userInFo ? null : ( // router.push('screens/DashBoardScreen')
     <View style={{ flex: 1 }}>

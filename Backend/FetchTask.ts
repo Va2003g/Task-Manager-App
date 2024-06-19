@@ -37,9 +37,6 @@ interface statusType {
   userId: string;
 }
 
-function find(id:string,array:any[]){
-
-}
 function formatTask(
   tasks: TaskData[],
   categoryArray: typeForCategoriesTags[],
@@ -60,12 +57,12 @@ function formatTask(
     }
     task.tags = tagsFilteredArray;
   });
-  console.log('tasks at formatTask',tasks)
+  // console.log('tasks at formatTask',tasks)
   Store.updateUserTask(tasks);
 }
 
 async function FetchTask(userid: string | undefined) {
-  console.log("userid: ", userid);
+  // console.log("userid: ", userid);
   const task: TaskData[] = [];
   const categoryArray: typeForCategoriesTags[] = [];
   const tagsArray: typeForCategoriesTags[] = [];
@@ -84,8 +81,8 @@ async function FetchTask(userid: string | undefined) {
       tagsArray.push({ id: doc.id, ...doc.data() } as typeForCategoriesTags)
     );
 
-    console.log("tagsArray: ", tagsArray);
-    console.log("categoryArray: ", categoryArray);
+    // console.log("tagsArray: ", tagsArray);
+    // console.log("categoryArray: ", categoryArray);
 
     //finding status of all tasks of user
     const queryForStatus = query(
@@ -97,7 +94,7 @@ async function FetchTask(userid: string | undefined) {
     statusResult.forEach((doc) => {
       statusArray.push({ id: doc.id, ...doc.data() } as statusType);
     });
-    console.log("statusArray: ", statusArray);
+    // console.log("statusArray: ", statusArray);
 
     //for tasks
     const queryForFindingTask = query(
@@ -109,7 +106,7 @@ async function FetchTask(userid: string | undefined) {
     taskQueryResult.forEach((doc) => {
       task.push({ id: doc.id, ...doc.data() } as TaskData);
     });
-    console.log("task", task);
+    // console.log("task", task);
     formatTask(task, categoryArray, tagsArray, statusArray);
   } catch (err) {
     console.log(err);

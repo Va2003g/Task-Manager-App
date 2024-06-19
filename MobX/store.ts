@@ -2,6 +2,7 @@ import { makeAutoObservable, makeObservable, observable } from "mobx";
 import { AddTask, AddUser, FetchTask } from "@/Backend";
 import { TaskData } from "@/Backend";
 import { Alert } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 class store {
   User: Object = {};
@@ -42,6 +43,7 @@ class store {
   updateUserTask(tasks:TaskData[])
   {
     this.UserTask = tasks;
+    AsyncStorage.setItem("TaskData", JSON.stringify(tasks));
   }
   get getUserId() {
     return this.UserId;
