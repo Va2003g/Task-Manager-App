@@ -11,7 +11,7 @@ import {
   Alert,
   FlatList,
 } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 import { useFonts } from "expo-font";
 import { Roboto_400Regular, Roboto_700Bold } from "@expo-google-fonts/roboto";
 import { Link, router, useNavigation } from "expo-router";
@@ -25,7 +25,15 @@ import { TaskData } from "@/Backend";
 
 const DashBoardScreen = () => {
   const navigation = useNavigation();
+  const [selectedFilter, setSelectedFilter] = useState<string>('All');
 
+  const handlePress = (filter: string) => {
+    setSelectedFilter(filter);
+  };
+
+  const getTextStyle = (filter: string) => {
+    return selectedFilter === filter ? styles.filterColor : styles.font;
+  };
   const [fontsLoaded, fontError] = useFonts({
     Roboto_700Bold,
     Roboto_400Regular,
@@ -41,9 +49,9 @@ const DashBoardScreen = () => {
   return (
     <View style={styles.outerContainer}>
       <View style={styles.filter}>
-        <Text style={styles.font}>All</Text>
-        <Text style={styles.font}>Pending</Text>
-        <Text style={styles.font}>Completed</Text>
+        <Text style={getTextStyle('All')} onPress={() => handlePress('All')}>All</Text>
+        <Text style={getTextStyle('Pending')} onPress={() => handlePress('Pending')}>Pending</Text>
+        <Text style={getTextStyle('Completed')} onPress={() => handlePress('Completed')}>Completed</Text>
       </View>
       <View style={styles.tasks}>
         {Store.loading ? (
@@ -76,13 +84,24 @@ const DashBoardScreen = () => {
 export default observer(DashBoardScreen);
 const styles = StyleSheet.create({
   filter: {
-    flex: 1,
+    flex: 1.3,
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
     backgroundColor: "white",
     gap: 1,
-    borderRadius: 8,
+    borderRadius: 10,
+  },
+  filterColor:{
+    backgroundColor:colors.filterActiveColor,
+    color: 'white',
+    fontFamily: "Roboto_400Regular",
+    flex: 1,
+    textAlign: "center",
+    padding: 13,
+    fontWeight: "bold",
+    fontSize: 16,
+    borderRadius:15
   },
   outerContainer: {
     flex: 1,
@@ -116,7 +135,7 @@ const styles = StyleSheet.create({
     fontFamily: "Roboto_400Regular",
     flex: 1,
     textAlign: "center",
-    padding: 10,
+    padding: 13,
     fontWeight: "bold",
     fontSize: 16,
   },

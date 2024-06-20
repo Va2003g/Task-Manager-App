@@ -8,6 +8,8 @@ import {
   Alert,
   ScrollView,
   TextInputProps,
+  NativeSyntheticEvent,
+  TextInputSubmitEditingEventData,
 } from "react-native";
 import React, { ChangeEvent, ReactEventHandler, useState } from "react";
 import { hero, TaskPhoto, Google, hamburger } from "./assets";
@@ -47,7 +49,7 @@ const AddTask = () => {
     // console.log("task", task);
   };
 
-  const handleTagsInput = (props: TextInputProps) => {
+  const handleTagsInput = (props: NativeSyntheticEvent<TextInputSubmitEditingEventData>) => {
     const text = props.nativeEvent?.text;
     // setTags((prevState) => {
     //   if(text==='') return prevState

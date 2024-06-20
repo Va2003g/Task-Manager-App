@@ -38,18 +38,10 @@ class store {
       // tasks = tasks ? await JSON.parse(tasks) : [];
 
       if (tasks !== null) {
-        // console.log("tasks from local storage: ", tasks);
+        console.log("tasks from local storage: ", tasks);
         this.updateUserTask(await JSON.parse(tasks));
         this.setloading(false);
       } else {
-        // console.log('this.UserTask.length : ', this.UserTask.length);
-        // const fetchedTasks = await FetchTask(this.UserId);
-        // if (fetchedTasks !== undefined) {
-        //   this.updateUserTask(fetchedTasks);
-        //   await AsyncStorage.setItem("TaskData", JSON.stringify(fetchedTasks));
-        //   console.log("data Saved successfully");
-        //   this.setloading(false);
-        // }
         await this.callFetchTask();
       }
     } catch (error) {

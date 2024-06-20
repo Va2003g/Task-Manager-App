@@ -31,7 +31,7 @@ interface typeForCategoriesTags {
 }
 interface statusType {
   Pending: Boolean;
-  Compeleted: Boolean;
+  Completed: Boolean;
   id: string;
   userId: string;
 }
@@ -42,13 +42,16 @@ function formatTask(
   tagsArray: typeForCategoriesTags[],
   statusArray: statusType[]
 ) {
+  // console.log('format task working...')
   tasks.forEach((task) => {
     // task.category = find(task.category,categoryArray);
     task.category = categoryArray.filter((arr)=>arr.id===task.category)[0].name;
     let filteredArray = statusArray.filter((arr)=>arr.id===task.status)[0]
     if(filteredArray.Pending) task.status = 'pending'
-    else if(filteredArray.Compeleted) task.status = 'completed'
-
+    // console.log('filteredArray.Pending: ', filteredArray.Pending)
+    if(filteredArray.Completed) task.status = 'completed'
+    // console.log('filteredArray.Compeleted: ', filteredArray.Completed)
+    // console.log('task.status in fetch tasks: ', task.status,task.id)
     let tagsFilteredArray:string[]=[];
     for(let ele of task.tags)
     {
@@ -63,6 +66,7 @@ function formatTask(
 
 async function FetchTask(userid: string | undefined) {
   // console.log("userid: ", userid);
+  // console.log('fetch task working...')
   const task: TaskData[] = [];
   const categoryArray: typeForCategoriesTags[] = [];
   const tagsArray: typeForCategoriesTags[] = [];

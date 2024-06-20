@@ -67,9 +67,10 @@ export const CustomDrawer = (props: DrawerContentComponentProps) => {
           <Button
             title="Log Out"
             onPress={async () => {
+              await AsyncStorage.clear();
+              await AsyncStorage.removeItem('TaskData');
+              // console.log('AsyncStorage',AsyncStorage.getAllKeys());
               await signOut(auth);
-              AsyncStorage.clear();
-              AsyncStorage.removeItem('TaskData')
               router.push("/");
             }}
           />

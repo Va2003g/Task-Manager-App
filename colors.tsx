@@ -15,5 +15,6 @@ export default {
   addFormGradient: "rgba(108, 134, 230, 1)",
   addFormGradient2: "rgba(105, 149, 230, 1)",
   completedTaskBG:'rgba(246, 255, 251, 0.69)',
-  pendingTaskBG:'rgba(237, 241, 249, 1)'
+  pendingTaskBG:'rgba(237, 241, 249, 1)',
+  filterActiveColor:'#6B89E6'
 };
