@@ -35,6 +35,13 @@ const DrawerLayout = () => {
             title: "My Day Tasks",
           }}
         />
+        <Drawer.Screen
+          name="Profile"
+          options={{
+            drawerLabel: "Profile",
+            title: "Profile",
+          }}
+        />
       </Drawer>
     </GestureHandlerRootView>
   );

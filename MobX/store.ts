@@ -4,12 +4,21 @@ import { TaskData } from "@/Backend";
 import { Alert } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import React, { useState } from "react";
+
+interface statusType {
+  Pending: Boolean;
+  Completed: Boolean;
+  id: string;
+  userId: string;
+}
 class store {
   User: Object = {};
   Tasks: TaskData | null = null;
   UserId: string | undefined = "";
   UserTask: TaskData[] = [];
   loading: boolean = false;
+  statusArray: statusType[]=[]
+
   constructor() {
     makeAutoObservable(this);
 
@@ -18,6 +27,10 @@ class store {
     //     User:observable,
     //     Tasks:observable,
     // })
+  }
+
+  setStatusArray=(status:statusType[])=>{
+    this.statusArray = status;
   }
 
   setloading = (value: boolean) => {

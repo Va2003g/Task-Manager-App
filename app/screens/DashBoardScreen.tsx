@@ -11,7 +11,7 @@ import {
   Alert,
   FlatList,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useFonts } from "expo-font";
 import { Roboto_400Regular, Roboto_700Bold } from "@expo-google-fonts/roboto";
 import { Link, router, useNavigation } from "expo-router";
@@ -21,14 +21,61 @@ import { observable } from "mobx";
 import { observer } from "mobx-react";
 import { Store } from "@/MobX/store";
 import { TaskItem } from "@/components";
-import { TaskData } from "@/Backend";
+import { TaskData, db } from "@/Backend";
+import { doc, collection, getDoc } from "firebase/firestore";
 
 const DashBoardScreen = () => {
   const navigation = useNavigation();
   const [selectedFilter, setSelectedFilter] = useState<string>("All");
+  const [taskToDisplay,setTaskToDisplay] = useState<TaskData[]>(Store.UserTask);
+  // const [loading,setLoading] = useState<boolean>()
 
+  useEffect(()=>{
+    setTaskToDisplay(Store.UserTask);
+  },[])
+  const filterArray= async (filter:string)=>{
+    // const filteredTasks = Store.UserTask.filter(async(task)=>{
+    //   const statusDocRef = doc(collection(db, "Status"), task.status);
+    //   const status = await getDoc(statusDocRef);
+    //   if (status.exists()) {
+    //     if (status.get(filter) === true) {
+    //       console.log('task',task)
+    //       return task;
+    //     }
+    //   }
+    // })
+    // console.log('filteredTasks',filteredTasks);
+    // setTaskToDisplay(filteredTasks);
+    try {
+      Store.setloading(true);
+      const filteredTasks = await Promise.all(
+        Store.UserTask.map(async (task) => {
+          const statusDocRef = doc(collection(db, "Status"), task.status);
+          const status = await getDoc(statusDocRef);
+  
+          if (status.exists() && status.get(filter) === true) {
+            console.log("task", task);
+            return task;
+          }
+  
+          return null;
+        })
+      );
+  
+      const nonNullFilteredTasks = filteredTasks.filter((task):task is TaskData => task !== null);
+  
+      console.log("filteredTasks", nonNullFilteredTasks);
+      Store.setloading(false);
+      setTaskToDisplay(nonNullFilteredTasks);
+    } catch (error) {
+      console.error("Error filtering tasks:", error);
+    }
+  }
   const handlePress = (filter: string) => {
     setSelectedFilter(filter);
+    if(filter==='All')setTaskToDisplay(Store.UserTask)
+    if(filter==='Pending')filterArray('Pending')
+    if(filter==='Completed')filterArray('Completed')
   };
 
   const getTextStyle = (filter: string) => {
@@ -70,7 +117,7 @@ const DashBoardScreen = () => {
           <Text>Loading....</Text>
         ) : (
           <FlatList
-            data={Store.UserTask}
+            data={taskToDisplay}
             renderItem={renderTaskItem}
             keyExtractor={(item, index) => item.id || index.toString()}
           />

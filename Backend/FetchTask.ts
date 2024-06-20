@@ -10,6 +10,7 @@ import {
 } from "firebase/firestore";
 import { db } from "./Firebase";
 import { TaskData } from "./TaskData";
+import { Store } from "@/MobX/store";
 
 /**
  * find all categories with ids
@@ -19,9 +20,6 @@ import { TaskData } from "./TaskData";
  * statusArray:  [{"Completed": false, "Pending": true, "id": "eTuEpqojYKEYe4eNExvd", "userId": "B4gkf4gcGiCVv6XeyBMR"}, {"Completed": false, "Pending": true, "id": "fEIXoIWwPHCNVPRFv49h", "userId": "B4gkf4gcGiCVv6XeyBMR"}]
  * categoryArray:  [{"id": "6mCgxce7tXPlr980CdF0", "name": "Study", "userId": "B4gkf4gcGiCVv6XeyBMR"}, {"id": "frdiAjXU6xVfnkNmGYYI", "name": "Games", "userId": "B4gkf4gcGiCVv6XeyBMR"}]
  * tagsArray:  [{"id": "AvzpT0446yCGRRvRLk3d", "name": "Entertainment", "userId": "B4gkf4gcGiCVv6XeyBMR"}, {"id": "BF8rH3uLevaIWulsnA98", "name": "Sport", "userId": "B4gkf4gcGiCVv6XeyBMR"}, {"id": "Cw2ovKEypkrSG6B1fssz", "name": "Job", "userId": "B4gkf4gcGiCVv6XeyBMR"}, {"id": "XvLTQXLuCR5AhejpHN0d", "name": "Cardio", "userId": "B4gkf4gcGiCVv6XeyBMR"}, {"id": "kw69WXREonekMH7l55IY", "name": "Work", "userId": "B4gkf4gcGiCVv6XeyBMR"}]
- *
- *
- *
  */
 
 interface typeForCategoriesTags {
@@ -93,6 +91,7 @@ async function FetchTask(userid: string | undefined) {
       statusArray.push({ id: doc.id, ...doc.data() } as statusType);
     });
     // console.log("statusArray: ", statusArray);
+    Store.setStatusArray(statusArray);
 
     //for tasks
     const queryForFindingTask = query(

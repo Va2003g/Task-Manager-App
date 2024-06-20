@@ -10,14 +10,32 @@ import {
 import { useFonts } from "expo-font";
 import Checkbox from "expo-checkbox";
 import { collection, doc, getDoc, getDocs, setDoc } from "firebase/firestore";
+import { loadingGif } from "@/app/assets";
+import { Image } from "expo-image";
 interface taskProps {
   task: TaskData;
 }
 const TaskItem = ({ task }: taskProps) => {
-  useEffect(() => {
-    getStatus();
+  const [isChecked, setChecked] = useState<boolean>();
+  const [loading, setloading] = useState<boolean>(false);
+  console.log("task.status: ", task.status, task.id);
+  const [fontsLoaded, fontError] = useFonts({
+    Roboto_500Medium,
+    Poppins_300Light,
+    Poppins_600SemiBold,
   });
+
+  if (!fontsLoaded && !fontError) {
+    return null;
+  }
+
+  useEffect(() => {
+    //find status of the task
+    getStatus();
+  },[]);
+
   const handleStatus = async () => {
+    // setloading(true);
     if (isChecked) {
       const statusDocRef = doc(collection(db, "Status"), task.status);
       // await setDoc(doc(db, 'TaskData', storedDoc.id), { id: storedDoc.id }, { merge: true });
@@ -35,27 +53,19 @@ const TaskItem = ({ task }: taskProps) => {
       );
     }
     setChecked(!isChecked);
+    // setloading(false);
   };
 
   const getStatus = async () => {
+    setloading(true);
     const statusDocRef = doc(collection(db, "Status"), task.status);
     const status = await getDoc(statusDocRef);
     if (status.exists()) {
       if (status.get("Pending") === true) setChecked(false);
       else if (status.get("Completed") === true) setChecked(true);
     }
+    setloading(false);
   };
-  const [isChecked, setChecked] = useState<boolean>();
-  console.log("task.status: ", task.status, task.id);
-  const [fontsLoaded, fontError] = useFonts({
-    Roboto_500Medium,
-    Poppins_300Light,
-    Poppins_600SemiBold,
-  });
-
-  if (!fontsLoaded && !fontError) {
-    return null;
-  }
 
   return (
     <View
@@ -76,12 +86,17 @@ const TaskItem = ({ task }: taskProps) => {
           {task.tags.map((tag) => `#${tag}`).join(", ")}
         </Text>
       </View>
-      <Checkbox
-        style={styles.checkbox}
-        value={isChecked}
-        onValueChange={handleStatus}
-        color={isChecked ? "#3DD598" : "#C0D4FF"}
-      />
+
+      {loading ? (
+        <Image source={loadingGif} style={{ width: 55, height: 55 }} />
+      ) : (
+        <Checkbox
+          style={styles.checkbox}
+          value={isChecked}
+          onValueChange={handleStatus}
+          color={isChecked ? "#3DD598" : "#C0D4FF"}
+        />
+      )}
     </View>
   );
 };
