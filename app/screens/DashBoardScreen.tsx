@@ -25,7 +25,7 @@ import { TaskData } from "@/Backend";
 
 const DashBoardScreen = () => {
   const navigation = useNavigation();
-  const [selectedFilter, setSelectedFilter] = useState<string>('All');
+  const [selectedFilter, setSelectedFilter] = useState<string>("All");
 
   const handlePress = (filter: string) => {
     setSelectedFilter(filter);
@@ -42,36 +42,45 @@ const DashBoardScreen = () => {
   if (!fontsLoaded && !fontError) {
     return null;
   }
-  interface itemProp{
-    item:TaskData
+  interface itemProp {
+    item: TaskData;
   }
-  const renderTaskItem = ({ item }:itemProp) => <TaskItem task={item} />;
+  const renderTaskItem = ({ item }: itemProp) => <TaskItem task={item} />;
   return (
     <View style={styles.outerContainer}>
       <View style={styles.filter}>
-        <Text style={getTextStyle('All')} onPress={() => handlePress('All')}>All</Text>
-        <Text style={getTextStyle('Pending')} onPress={() => handlePress('Pending')}>Pending</Text>
-        <Text style={getTextStyle('Completed')} onPress={() => handlePress('Completed')}>Completed</Text>
+        <Text style={getTextStyle("All")} onPress={() => handlePress("All")}>
+          All
+        </Text>
+        <Text
+          style={getTextStyle("Pending")}
+          onPress={() => handlePress("Pending")}
+        >
+          Pending
+        </Text>
+        <Text
+          style={getTextStyle("Completed")}
+          onPress={() => handlePress("Completed")}
+        >
+          Completed
+        </Text>
       </View>
       <View style={styles.tasks}>
         {Store.loading ? (
           <Text>Loading....</Text>
         ) : (
-          // Store.UserTask.map((task, index) => (
-          //   <TaskItem task={task} key={index} />
-          // ))
           <FlatList
-          data={Store.UserTask}
-          renderItem={renderTaskItem}
-          keyExtractor={(item, index) => item.id || index.toString()}
-        />
+            data={Store.UserTask}
+            renderItem={renderTaskItem}
+            keyExtractor={(item, index) => item.id || index.toString()}
+          />
         )}
       </View>
       <LinearGradient
         style={styles.addBtn}
         colors={[colors.addFormGradient, colors.addFormGradient2]}
       >
-        <Pressable onPress={()=>router.push('AddTask')} >
+        <Pressable onPress={() => router.push("AddTask")}>
           <Text style={styles.plusIcon}>+</Text>
         </Pressable>
       </LinearGradient>
@@ -92,16 +101,16 @@ const styles = StyleSheet.create({
     gap: 1,
     borderRadius: 10,
   },
-  filterColor:{
-    backgroundColor:colors.filterActiveColor,
-    color: 'white',
+  filterColor: {
+    backgroundColor: colors.filterActiveColor,
+    color: "white",
     fontFamily: "Roboto_400Regular",
     flex: 1,
     textAlign: "center",
     padding: 13,
     fontWeight: "bold",
     fontSize: 16,
-    borderRadius:15
+    borderRadius: 15,
   },
   outerContainer: {
     flex: 1,

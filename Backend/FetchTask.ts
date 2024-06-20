@@ -46,12 +46,6 @@ function formatTask(
   tasks.forEach((task) => {
     // task.category = find(task.category,categoryArray);
     task.category = categoryArray.filter((arr)=>arr.id===task.category)[0].name;
-    let filteredArray = statusArray.filter((arr)=>arr.id===task.status)[0]
-    if(filteredArray.Pending) task.status = 'pending'
-    // console.log('filteredArray.Pending: ', filteredArray.Pending)
-    if(filteredArray.Completed) task.status = 'completed'
-    // console.log('filteredArray.Compeleted: ', filteredArray.Completed)
-    // console.log('task.status in fetch tasks: ', task.status,task.id)
     let tagsFilteredArray:string[]=[];
     for(let ele of task.tags)
     {
