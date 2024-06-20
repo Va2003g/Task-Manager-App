@@ -47,6 +47,7 @@ const styles = StyleSheet.create({
     borderRadius: 18,
     paddingLeft:20,
     paddingTop:15,
+    marginBottom:12,
   },
   tags:{
     // flex:1,

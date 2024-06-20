@@ -9,6 +9,7 @@ import {
   Pressable,
   Dimensions,
   Alert,
+  FlatList,
 } from "react-native";
 import React from "react";
 import { useFonts } from "expo-font";
@@ -20,6 +21,7 @@ import { observable } from "mobx";
 import { observer } from "mobx-react";
 import { Store } from "@/MobX/store";
 import { TaskItem } from "@/components";
+import { TaskData } from "@/Backend";
 
 const DashBoardScreen = () => {
   const navigation = useNavigation();
@@ -32,7 +34,10 @@ const DashBoardScreen = () => {
   if (!fontsLoaded && !fontError) {
     return null;
   }
-
+  interface itemProp{
+    item:TaskData
+  }
+  const renderTaskItem = ({ item }:itemProp) => <TaskItem task={item} />;
   return (
     <View style={styles.outerContainer}>
       <View style={styles.filter}>
@@ -44,18 +49,23 @@ const DashBoardScreen = () => {
         {Store.loading ? (
           <Text>Loading....</Text>
         ) : (
-          Store.UserTask.map((task, index) => (
-            <TaskItem task={task} key={index} />
-          ))
+          // Store.UserTask.map((task, index) => (
+          //   <TaskItem task={task} key={index} />
+          // ))
+          <FlatList
+          data={Store.UserTask}
+          renderItem={renderTaskItem}
+          keyExtractor={(item, index) => item.id || index.toString()}
+        />
         )}
       </View>
       <LinearGradient
         style={styles.addBtn}
         colors={[colors.addFormGradient, colors.addFormGradient2]}
       >
-        <Link href="AddTask" style={styles.plusIcon}>
-          +
-        </Link>
+        <Pressable onPress={()=>router.push('AddTask')} >
+          <Text style={styles.plusIcon}>+</Text>
+        </Pressable>
       </LinearGradient>
 
       <StatusBar barStyle={"light-content"} />

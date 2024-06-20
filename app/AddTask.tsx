@@ -18,9 +18,11 @@ import { useFonts } from "expo-font";
 import { Roboto_400Regular, Roboto_500Medium } from "@expo-google-fonts/roboto";
 import { TaskData } from "../Backend";
 import { Store } from "../MobX/store";
+import DatePicker from "react-native-date-picker";
 const AddTask = () => {
   const [tags, setTags] = useState<string[]>([]);
   const [isFocussed, setIsFocussed] = useState(false);
+  const [date, setDate] = useState(new Date())
   const [task, setTask] = useState<TaskData>({
     name: "",
     tags: tags,
@@ -127,7 +129,7 @@ const AddTask = () => {
             onSubmitEditing={handleTagsInput}
           />
           {task.tags.length !== 0 && (
-            <View style={styles.tagsContainer}>
+            <ScrollView style={styles.tagsContainer} contentContainerStyle={styles.tagsContainer} horizontal={true}>
               {task.tags?.map((tag, index) => (
                 <Text
                   key={index}
@@ -137,7 +139,7 @@ const AddTask = () => {
                   {tag},
                 </Text>
               ))}
-            </View>
+            </ScrollView>
           )}
 
           <Text style={styles.label}>Due Date</Text>
@@ -147,6 +149,7 @@ const AddTask = () => {
             value={task.dueDate}
             onChangeText={(text) => handleChange("dueDate", text)}
           />
+          {/* <DatePicker date={date} onDateChange={setDate} /> */}
 
           <LinearGradient
             colors={[colors.taskBtn1, colors.taskBtn2]}
@@ -176,7 +179,7 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "row",
     gap: 4,
-    height: 40,
+    height: 50,
     marginLeft: 9,
   },
   tagsItem: {
