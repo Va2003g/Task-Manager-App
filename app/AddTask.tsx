@@ -11,7 +11,8 @@ import {
   NativeSyntheticEvent,
   TextInputSubmitEditingEventData,
 } from "react-native";
-import React, { ChangeEvent, ReactEventHandler, useState } from "react";
+import Autocomplete from "react-native-autocomplete-input";
+import React, { useRef, useState } from "react";
 import { hero, TaskPhoto, Google, hamburger } from "./assets";
 import { Image } from "expo-image";
 import { LinearGradient } from "expo-linear-gradient";
@@ -21,10 +22,21 @@ import { Roboto_400Regular, Roboto_500Medium } from "@expo-google-fonts/roboto";
 import { TaskData } from "../Backend";
 import { Store } from "../MobX/store";
 import DatePicker from "react-native-date-picker";
+import { observer } from "mobx-react";
+interface typeForCategoriesTags {
+  name: string;
+  id: string;
+  userId: string;
+}
 const AddTask = () => {
   const [tags, setTags] = useState<string[]>([]);
   const [isFocussed, setIsFocussed] = useState(false);
-  const [date, setDate] = useState(new Date())
+  const [date, setDate] = useState(new Date());
+  const textInputRef = useRef<TextInput | undefined | null>(null);
+  const [category, setCategory] = useState<typeForCategoriesTags[]>([]);
+  const [tagsSuggestion, setTagsSuggestion] = useState<typeForCategoriesTags[]>(
+    []
+  );
   const [task, setTask] = useState<TaskData>({
     name: "",
     tags: tags,
@@ -40,6 +52,30 @@ const AddTask = () => {
   });
 
   const handleChange = (name: string, value: string) => {
+    console.log(Store.categoryData);
+    if (name === "dueDate") {
+      console.log("value ", value);
+      const date = new Date(value);
+      const day = date.getDate().toString().padStart(2, "0");
+      const month = (date.getMonth() + 1).toString().padStart(2, "0"); // Note: Month is zero-indexed
+      const year = date.getFullYear().toString();
+
+      value = `${day}-${month}-${year}`;
+      console.log("value: ", value);
+    } else if (name === "category") {
+      const filteredCategory = Store.categoryData.filter((data) => {
+        return data.name.toLowerCase().includes(value.toLowerCase());
+      });
+      if (value === "") setCategory([]);
+      else setCategory(filteredCategory);
+    } else if (name === "tags") {
+      const filteredCategory = Store.tagsData.filter((data) => {
+        return data.name.toLowerCase().includes(value.toLowerCase());
+      });
+      if (value === "") setTagsSuggestion([]);
+      else setTagsSuggestion(filteredCategory);
+      return;
+    }
     setTask((prevState) => {
       return {
         ...prevState,
@@ -49,20 +85,24 @@ const AddTask = () => {
     // console.log("task", task);
   };
 
-  const handleTagsInput = (props: NativeSyntheticEvent<TextInputSubmitEditingEventData>) => {
-    const text = props.nativeEvent?.text;
+  const handleTagsInput = (
+    props?: NativeSyntheticEvent<TextInputSubmitEditingEventData>,
+    name?: string
+  ) => {
+    const text = props?.nativeEvent?.text || name;
     // setTags((prevState) => {
     //   if(text==='') return prevState
     //   return [...prevState, text];
     // });
-    task.tags.push(text);
+    if (text !== undefined) task.tags.push(text);
     setTask((prevState) => {
       return {
         ...prevState,
       };
     });
-    // // console.log("tags", tags);
-    // console.log("task", task);
+    // textInputRef.current?.hideResults = true;
+    textInputRef.current?.clear();
+    setTagsSuggestion([]);
   };
 
   const deleteItem = (tag: string) => {
@@ -76,9 +116,9 @@ const AddTask = () => {
   };
 
   const handleSubmit = () => {
-    // Alert.alert("Success", "Task Added Successfully")
     console.log("Task at Addtask component", task);
     Store.addTask(task);
+    textInputRef.current?.clear();
     setTask({
       name: "",
       tags: [],
@@ -110,48 +150,117 @@ const AddTask = () => {
           <TextInput
             placeholder="Task Name"
             style={styles.input}
-            keyboardType="numeric"
             onFocus={() => setIsFocussed(!false)}
             onBlur={() => setIsFocussed(false)}
             value={task.name}
             onChangeText={(text) => handleChange("name", text)}
           />
-          {/* {isFocussed?(<Text>Hi I am isFocussed</Text>):<Text>I am not more</Text>} */}
           <Text style={styles.label}>Category</Text>
-          <TextInput
-            placeholder="Category"
-            style={styles.input}
+          <Autocomplete
+            editable={true}
+            autoCorrect={false}
+            data={category}
             value={task.category}
             onChangeText={(text) => handleChange("category", text)}
+            placeholder={"Category"}
+            containerStyle={{ zIndex: 3 }}
+            inputContainerStyle={styles.inputForCategoryTags}
+            
+            flatListProps={{
+              style: {maxHeight: 200},
+              keyExtractor: (item) => item.id,
+              renderItem: ({ item }) => (
+                <TouchableOpacity
+                  style={styles.suggestionList}
+                  onPress={() => {
+                    handleChange("category", item.name), setCategory([]);
+                  }}
+                >
+                  <Text style={styles.itemText}>{item.name}</Text>
+                  {item.userId === Store.UserId && (
+                    <Text
+                      style={{
+                        backgroundColor: "rgba(61, 213, 152, 0.2)",
+                        color: "rgba(61, 213, 152, 1)",
+                        textAlignVertical: "center",
+                        padding: 5,
+                      }}
+                    >
+                      Your Category
+                    </Text>
+                  )}
+                </TouchableOpacity>
+              ),
+            }}
           />
           <Text style={styles.label}>Tags</Text>
-          <TextInput
-            placeholder="Tags"
-            style={styles.input}
+          <Autocomplete
+            editable={true}
+            autoCorrect={false}
+            data={tagsSuggestion}
+            // value={task.category}
+            onChangeText={(text) => handleChange("tags", text)}
             onSubmitEditing={handleTagsInput}
+            placeholder={"Tags"}
+            ref={textInputRef}
+            containerStyle={{ zIndex: 2 }}
+            inputContainerStyle={styles.inputForTags}
+            // hideResults={true}
+            flatListProps={{
+              keyExtractor: (item) => item.id,
+              style: {maxHeight: 200},
+              renderItem: ({ item }) => (
+                <TouchableOpacity
+                  style={styles.suggestionList}
+                  onPress={() => {
+                    handleTagsInput(undefined, item.name);
+                  }}
+                >
+                  <Text style={styles.itemText}>{item.name}</Text>
+                  {item.userId === Store.UserId && (
+                    <Text
+                      style={{
+                        backgroundColor: "rgba(61, 213, 152, 0.2)",
+                        color: "rgba(61, 213, 152, 1)",
+                        textAlignVertical: "center",
+                        padding: 5,
+                      }}
+                    >
+                      Your Tags
+                    </Text>
+                  )}
+                </TouchableOpacity>
+              ),
+            }}
           />
           {task.tags.length !== 0 && (
-            <ScrollView style={styles.tagsContainer} contentContainerStyle={styles.tagsContainer} horizontal={true}>
+            <ScrollView
+              style={styles.tagsContainer}
+              contentContainerStyle={styles.tagsContainer}
+              horizontal={true}
+            >
               {task.tags?.map((tag, index) => (
                 <Text
                   key={index}
                   style={styles.tagsItem}
                   onPress={() => deleteItem(tag)}
                 >
-                  {tag},
+                  #{tag},
                 </Text>
               ))}
             </ScrollView>
           )}
 
           <Text style={styles.label}>Due Date</Text>
-          <TextInput
-            placeholder="Due Date"
-            style={styles.input}
-            value={task.dueDate}
-            onChangeText={(text) => handleChange("dueDate", text)}
+          <DatePicker
+            date={date}
+            onDateChange={(date) =>
+              handleChange("dueDate", date.toDateString())
+            }
+            mode="date"
+            style={{ height: 100 }}
+            minimumDate={new Date()}
           />
-          {/* <DatePicker date={date} onDateChange={setDate} /> */}
 
           <LinearGradient
             colors={[colors.taskBtn1, colors.taskBtn2]}
@@ -167,25 +276,40 @@ const AddTask = () => {
   );
 };
 
-export default AddTask;
+export default observer(AddTask);
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: "space-evenly",
     padding: 41,
-    gap: 54,
-    backgroundColor: colors.secondaryDashboard,
+    backgroundColor: "#fff",
+    gap:3,
+  },
+  itemText: {
+    fontSize: 15,
+    margin: 2,
+    fontFamily: "Poppins_600SemiBold",
+    color: colors.dashboardFont,
+  },
+  suggestionList: {
+    borderBottomWidth: 2,
+    borderColor: "rgba(226, 226, 234, 1)",
+    padding: 5,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    borderRadius: 23,
   },
   tagsContainer: {
     display: "flex",
     flexDirection: "row",
     gap: 4,
-    height: 50,
+    height: 22,
     marginLeft: 9,
   },
   tagsItem: {
     color: "green",
+    fontSize: 16,
   },
   heading: {
     fontFamily: "Roboto_500Medium",
@@ -203,6 +327,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     zIndex: 1,
+    marginTop:-29,
   },
   button: {
     padding: 19,
@@ -218,7 +343,7 @@ const styles = StyleSheet.create({
   image: {
     width: 150,
     height: 150,
-    top: 20,
+    top: -10,
     position: "absolute",
     zIndex: 2,
   },
@@ -237,10 +362,30 @@ const styles = StyleSheet.create({
     borderBottomWidth: 3,
     padding: 10,
     borderColor: "rgba(226, 226, 234, 1)",
+    zIndex: 1,
+  },
+  inputForCategoryTags: {
+    margin: 10,
+    padding: 1,
+    borderTopWidth: 0,
+    borderLeftWidth: 0,
+    borderRightWidth: 0,
+    backgroundColor: "transparent",
+    zIndex: 43,
+    position: "relative",
+  },
+  inputForTags: {
+    margin: 10,
+    padding: 1,
+    zIndex: 1,
+    borderTopWidth: 0,
+    borderLeftWidth: 0,
+    borderRightWidth: 0,
   },
   label: {
     textTransform: "uppercase",
     color: colors.dashboardFont,
     fontFamily: "Roboto_400Regular",
+    zIndex: 1,
   },
 });

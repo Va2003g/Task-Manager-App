@@ -28,13 +28,13 @@ const DrawerLayout = () => {
             title: "Dashboard",
           }}
         />
-        <Drawer.Screen
+        {/* <Drawer.Screen
           name="MyDayTasks"
           options={{
             drawerLabel: "My Day Tasks",
             title: "My Day Tasks",
           }}
-        />
+        /> */}
         <Drawer.Screen
           name="Profile"
           options={{

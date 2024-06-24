@@ -4,10 +4,16 @@ import { TaskData } from "@/Backend";
 import { Alert } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import React, { useState } from "react";
+import { router } from "expo-router";
 
 interface statusType {
   Pending: Boolean;
   Completed: Boolean;
+  id: string;
+  userId: string;
+}
+interface typeForCategoriesTags {
+  name: string;
   id: string;
   userId: string;
 }
@@ -18,6 +24,11 @@ class store {
   UserTask: TaskData[] = [];
   loading: boolean = false;
   statusArray: statusType[]=[]
+  showSearch:boolean = false;
+  pendingTask:number = 0
+  completedTask:number = 0
+  categoryData:typeForCategoriesTags[]=[]
+  tagsData:typeForCategoriesTags[]=[]
 
   constructor() {
     makeAutoObservable(this);
@@ -27,6 +38,20 @@ class store {
     //     User:observable,
     //     Tasks:observable,
     // })
+  }
+  setCategoriesData(data:typeForCategoriesTags[]){
+    this.categoryData = data;
+    console.log(' this.categoryData: ',  this.categoryData)
+
+  }
+  setTagsData(data:typeForCategoriesTags[]){
+    this.tagsData = data;
+  }
+  setPendingTask(value:number) {this.pendingTask = value;this.completedTask = this.UserTask.length - this.pendingTask}
+  setCompletedTask(value:number) {this.completedTask = value;this.pendingTask = this.UserTask.length - this.completedTask}
+  setShowSearch()
+  {
+    this.showSearch = !this.showSearch;
   }
 
   setStatusArray=(status:statusType[])=>{
@@ -39,11 +64,10 @@ class store {
 
   async updateUser(userData: object) {
     this.User = userData;
-
     try {
       const id = await AddUser(userData);
-      this.UserId = id;
-      // console.log("Userid from local storage in mobx: ", this.UserId);
+      if(id!==undefined) this.UserId = id;
+      console.log("Userid from local storage in mobx: ", this.UserId);
 
       this.setloading(true);
       let tasks = await AsyncStorage.getItem("TaskData");
@@ -59,17 +83,23 @@ class store {
       }
     } catch (error) {
       console.error("Error in updateUser: ", error);
+    }finally{
       this.setloading(false);
     }
   }
 
   async callFetchTask() {
-    const fetchedTasks = await FetchTask(this.UserId);
-    if (fetchedTasks !== undefined) {
-      this.updateUserTask(fetchedTasks);
-      await AsyncStorage.setItem("TaskData", JSON.stringify(fetchedTasks));
-      console.log("data Saved successfully");
-      this.setloading(false);
+    try{
+      const fetchedTasks = await FetchTask(this.UserId);
+      if (fetchedTasks !== undefined) {
+        this.updateUserTask(fetchedTasks);
+        await AsyncStorage.setItem("TaskData", JSON.stringify(fetchedTasks));
+        console.log("data Saved successfully");
+        this.setloading(false);
+      }
+    }catch(err)
+    {
+      console.log(err);
     }
   }
   addTask(tasks: TaskData) {

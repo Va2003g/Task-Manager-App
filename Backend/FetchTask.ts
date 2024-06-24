@@ -71,14 +71,15 @@ async function FetchTask(userid: string | undefined) {
       categoryArray.push({ id: doc.id, ...doc.data() } as typeForCategoriesTags)
     );
 
+    Store.setCategoriesData(categoryArray);
     //finding all tags
     const tagsDocs = await getDocs(collection(db, "Tags"));
     tagsDocs.docs.map((doc) =>
       tagsArray.push({ id: doc.id, ...doc.data() } as typeForCategoriesTags)
     );
-
-    // console.log("tagsArray: ", tagsArray);
-    // console.log("categoryArray: ", categoryArray);
+    Store.setTagsData(tagsArray)
+    console.log("tagsArray: ", tagsArray);
+    console.log("categoryArray: ", categoryArray);
 
     //finding status of all tasks of user
     const queryForStatus = query(

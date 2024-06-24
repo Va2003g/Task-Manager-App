@@ -12,7 +12,6 @@ import React, { useEffect, useState } from "react";
 import { FetchTask, TaskData, auth } from "../Backend";
 import { router } from "expo-router";
 import { Store } from "@/MobX/store";
-//initialize the web browser in the app itself
 
 WebBrowser.maybeCompleteAuthSession();
 export default function App() {
@@ -20,7 +19,7 @@ export default function App() {
   const [request, response, promptAsync] = Google.useAuthRequest({
     iosClientId: process.env.EXPO_PUBLIC_IOS_CLIENT_ID,
     androidClientId: process.env.EXPO_PUBLIC_ANDROID_CLIENT_ID,
-  }); //loads an authorization request and give a response
+  }); 
 
   const checkUserFromLocalStorage = async () => {
     // setLoading(true);
@@ -63,11 +62,9 @@ export default function App() {
           if (Platform.OS === "android")
             console.log("user", JSON.stringify(user));
           await AsyncStorage.setItem("userInfo", JSON.stringify(user));
-          // setUserInfo(user);
-            Store.updateUser(user);
-          // if(!Store.UserTask)
-            // FetchTask(Store.UserId);
-          router.push("screens/DashBoardScreen");
+            Store.updateUser(user).then(()=>router.push("screens/DashBoardScreen"));
+            // Store.updateUser(user)
+            // router.push("screens/DashBoardScreen")
         } else {
           setUserInfo("");
           console.log("no one is logged in");
@@ -78,7 +75,7 @@ export default function App() {
       console.log("err: ", err);
     }
   }, []);
-  //Warn:navigation is changing while component is not mounted
+  //Warn:navigation is changing while component is not rendered
   // useEffect(() => {
   //   if (userInFo) {
   //     Store.updateUser(userInFo);

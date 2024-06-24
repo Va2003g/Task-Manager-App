@@ -6,6 +6,8 @@ import colors from "../colors";
 import { Image } from "expo-image";
 import { useNavigation, DrawerActions } from "@react-navigation/native";
 import { DrawerHeaderProps } from "@react-navigation/drawer";
+import { observer } from "mobx-react";
+import { Store } from "@/MobX/store";
 
 export const Navbar = (props:DrawerHeaderProps) => {
   // console.log('props: ', props.options.title) 
@@ -27,14 +29,16 @@ export const Navbar = (props:DrawerHeaderProps) => {
         <Text style={styles.text}>{props.options.title}</Text>
       </View>
       <View style={styles.images}>
-        <Image source={Search} style={styles.logo} />
+        <Pressable onPress={()=>Store.setShowSearch()}>
+          <Image source={Search} style={styles.logo}/>
+        </Pressable>
         <Image source={Bell} style={styles.logo} />
       </View>
     </LinearGradient>
   );
 };
 
-export default Navbar;
+export default observer(Navbar);
 
 const styles = StyleSheet.create({
   drawerIcon: {

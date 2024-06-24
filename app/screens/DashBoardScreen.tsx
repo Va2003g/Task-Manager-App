@@ -23,6 +23,9 @@ import { Store } from "@/MobX/store";
 import { TaskItem } from "@/components";
 import { TaskData, db } from "@/Backend";
 import { doc, collection, getDoc } from "firebase/firestore";
+import { TextInput } from "react-native-gesture-handler";
+import { Image } from "expo-image";
+import { loadingGif } from "../assets";
 
 const DashBoardScreen = () => {
   const navigation = useNavigation();
@@ -30,22 +33,9 @@ const DashBoardScreen = () => {
   const [taskToDisplay,setTaskToDisplay] = useState<TaskData[]>(Store.UserTask);
   // const [loading,setLoading] = useState<boolean>()
 
-  useEffect(()=>{
-    setTaskToDisplay(Store.UserTask);
-  },[])
+  useEffect(()=>{setTaskToDisplay(Store.UserTask)},[])
+
   const filterArray= async (filter:string)=>{
-    // const filteredTasks = Store.UserTask.filter(async(task)=>{
-    //   const statusDocRef = doc(collection(db, "Status"), task.status);
-    //   const status = await getDoc(statusDocRef);
-    //   if (status.exists()) {
-    //     if (status.get(filter) === true) {
-    //       console.log('task',task)
-    //       return task;
-    //     }
-    //   }
-    // })
-    // console.log('filteredTasks',filteredTasks);
-    // setTaskToDisplay(filteredTasks);
     try {
       Store.setloading(true);
       const filteredTasks = await Promise.all(
@@ -57,14 +47,14 @@ const DashBoardScreen = () => {
             console.log("task", task);
             return task;
           }
-  
           return null;
         })
       );
-  
       const nonNullFilteredTasks = filteredTasks.filter((task):task is TaskData => task !== null);
-  
+
       console.log("filteredTasks", nonNullFilteredTasks);
+      if(filter==='Pending') Store.setPendingTask(nonNullFilteredTasks.length)
+      else Store.setCompletedTask(nonNullFilteredTasks.length)
       Store.setloading(false);
       setTaskToDisplay(nonNullFilteredTasks);
     } catch (error) {
@@ -72,11 +62,33 @@ const DashBoardScreen = () => {
     }
   }
   const handlePress = (filter: string) => {
+    console.log('working')
     setSelectedFilter(filter);
-    if(filter==='All')setTaskToDisplay(Store.UserTask)
+    if(filter==='All'){setTaskToDisplay(Store.UserTask)}
     if(filter==='Pending')filterArray('Pending')
     if(filter==='Completed')filterArray('Completed')
   };
+
+  const handleChange=(text:string):void=>
+  {
+    if(text==='')
+    {
+      setTaskToDisplay(Store.UserTask)
+      return;
+      // handlePress('All')
+    }
+    const lowercasedFilter = text.toLowerCase();
+    const filteredData = taskToDisplay.filter(item => {
+      return (
+        item.name.toLowerCase().includes(lowercasedFilter) ||
+        item.category.toLowerCase().includes(lowercasedFilter) ||
+        item.dueDate.toLowerCase().includes(lowercasedFilter) ||
+        item.tags.some(tag => tag.toLowerCase().includes(lowercasedFilter)) 
+        // item.status.toLowerCase().includes(lowercasedFilter)
+      );
+    });
+    setTaskToDisplay(filteredData);
+  }
 
   const getTextStyle = (filter: string) => {
     return selectedFilter === filter ? styles.filterColor : styles.font;
@@ -86,15 +98,17 @@ const DashBoardScreen = () => {
     Roboto_400Regular,
   });
 
-  if (!fontsLoaded && !fontError) {
-    return null;
-  }
+  // if (!fontsLoaded && !fontError) {
+  //   return null;
+  // }
   interface itemProp {
     item: TaskData;
   }
   const renderTaskItem = ({ item }: itemProp) => <TaskItem task={item} />;
   return (
     <View style={styles.outerContainer}>
+      {Store.showSearch && <TextInput style={styles.search} placeholder="Search.." onChangeText={(text) => handleChange(text)}/>}
+      
       <View style={styles.filter}>
         <Text style={getTextStyle("All")} onPress={() => handlePress("All")}>
           All
@@ -114,7 +128,7 @@ const DashBoardScreen = () => {
       </View>
       <View style={styles.tasks}>
         {Store.loading ? (
-          <Text>Loading....</Text>
+          <Image source={loadingGif} style={{width:100,height:100,marginHorizontal:'auto'}}/>
         ) : (
           <FlatList
             data={taskToDisplay}
@@ -158,6 +172,15 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontSize: 16,
     borderRadius: 15,
+  },
+  search:{
+    height:34,
+    // borderWidth:1,
+    marginBottom:20,
+    // borderColor:'grey',
+    paddingLeft:20,
+    borderRadius:12,
+    backgroundColor:'#fff'
   },
   outerContainer: {
     flex: 1,

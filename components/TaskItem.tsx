@@ -25,9 +25,9 @@ const TaskItem = ({ task }: taskProps) => {
     Poppins_600SemiBold,
   });
 
-  if (!fontsLoaded && !fontError) {
-    return null;
-  }
+  // if (!fontsLoaded && !fontError) {
+  //   return null;
+  // }
 
   useEffect(() => {
     //find status of the task
@@ -52,8 +52,8 @@ const TaskItem = ({ task }: taskProps) => {
         { merge: true }
       );
     }
-    setChecked(!isChecked);
     // setloading(false);
+    setChecked(!isChecked);
   };
 
   const getStatus = async () => {
