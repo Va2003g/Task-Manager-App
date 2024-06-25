@@ -134,6 +134,7 @@ const DashBoardScreen = () => {
             data={taskToDisplay}
             renderItem={renderTaskItem}
             keyExtractor={(item, index) => item.id || index.toString()}
+            showsVerticalScrollIndicator={false}
           />
         )}
       </View>
