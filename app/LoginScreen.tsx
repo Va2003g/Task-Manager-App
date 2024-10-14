@@ -40,7 +40,8 @@ const LoginScreen = ({ promptAsync }: promptAsyncProp) => {
         </View>
         <View style={styles.textContainer}>
           <Image
-            source={logo}
+            // source={logo}
+            alt="Your Logo"
             contentFit="contain"
             style={{ height: 100, width: 200 }}
           />
